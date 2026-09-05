@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  # 1. PostgreSQL Database Service
+  postgres:
+    image: postgres:15-alpine
+    container_name: kanban_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: kanban_user
+      POSTGRES_PASSWORD: kanban_password
+      POSTGRES_DB: kanban_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U kanban_user -d kanban_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # 2. Express TypeScript Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: kanban_backend
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      DATABASE_URL: "postgresql://kanban_user:kanban_password@postgres:5432/kanban_db?schema=public"
+      JWT_SECRET: "super_secret_jwt_key_kanban_2026"
+      PORT: 5000
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  # 3. Next.js Frontend App
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: kanban_frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: "http://localhost:5000/api"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
