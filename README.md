@@ -1,24 +1,30 @@
-
 # Mini Kanban Board Application
 
-A full-stack Mini Kanban Board application built with **Next.js**, **Express TypeScript**, **Prisma ORM**, and **PostgreSQL**, fully containerized using **Docker**.
+A full-stack Mini Kanban Board application built with **Next.js**, **Express TypeScript**, **Prisma ORM**, and **PostgreSQL**, fully containerized using **Docker** and deployed on **Vercel** and **Render**.
+
+---
+
+## 🔗 Live Demo & Links
+
+- **Frontend (Live App):** [https://mini-kanban-board-omega.vercel.app](https://mini-kanban-board-omega.vercel.app)
+- **Backend API (Production):** [https://mini-kanban-board-mge1.onrender.com/api/health](https://mini-kanban-board-mge1.onrender.com/api/health)
+- **GitHub Repository:** [https://github.com/mdsalahuddin96/mini-kanban-board](https://github.com/mdsalahuddin96/mini-kanban-board)
 
 ---
 
 ## 🛠️ Tech Stack
 
-- **Frontend:** Next.js (React), Tailwind CSS
+- **Frontend:** Next.js (App Router), React, Tailwind CSS
 - **Backend:** Node.js, Express, TypeScript
-- **Database & ORM:** PostgreSQL, Prisma ORM
+- **Database & ORM:** PostgreSQL (Supabase/Neon/Render Managed), Prisma ORM
 - **Containerization:** Docker, Docker Compose
+- **Deployment & Hosting:** Vercel (Frontend), Render (Backend), Managed PostgreSQL (Database)
 
 ---
 
 ## ⚙️ Environment Variables Setup
 
-Root level and sub-folder environment variables setup for Local & Docker development.
-
-### 1. Backend Environment Variables (`backend/.env`)
+### 1. Backend (`backend/.env`)
 
 Create a `.env` file inside the `backend/` directory:
 
@@ -26,17 +32,33 @@ Create a `.env` file inside the `backend/` directory:
 PORT=5000
 JWT_SECRET="super_secret_jwt_key_kanban_2026"
 
-# For Docker Environment:
+# For Docker Development:
 DATABASE_URL="postgresql://kanban_user:kanban_password@postgres:5432/kanban_db?schema=public"
 
 # For Local Development (Without Docker):
 # DATABASE_URL="postgresql://postgres:your_local_password@localhost:5432/kanban_db?schema=public"
 
+# For Production (Render Deployment):
+# DATABASE_URL="postgresql://user:password@cloud_db_host:5432/kanban_db?sslmode=require"
+
+```
+
+### 2. Frontend (`frontend/.env.local`)
+
+Create a `.env.local` file inside the `frontend/` directory:
+
+```env
+# Local Development:
+NEXT_PUBLIC_API_URL="http://localhost:5000/api"
+
+# Production (Set in Vercel Dashboard):
+# NEXT_PUBLIC_API_URL="[https://mini-kanban-board.onrender.com/api](https://mini-kanban-board.onrender.com/api)"
+
 ```
 
 ---
 
-## 🚀 Getting Started (Step-by-Step Setup)
+## 🚀 Getting Started (Local Setup)
 
 ### Option A: Run with Docker Compose (Recommended)
 
@@ -44,7 +66,7 @@ Make sure you have [Docker Desktop](https://www.docker.com/products/docker-deskt
 
 1. **Clone the repository:**
 ```bash
-git clone https://github.com/mdsalahuddin96/mini-kanban-board.git
+git clone [https://github.com/mdsalahuddin96/mini-kanban-board.git](https://github.com/mdsalahuddin96/mini-kanban-board.git)
 cd mini-kanban-board
 
 ```
@@ -79,7 +101,7 @@ docker compose ps
 #### Prerequisites
 
 * Node.js (v18 or v20)
-* PostgreSQL installed and running locally
+* PostgreSQL running locally
 
 #### 1. Database Setup
 
@@ -93,10 +115,7 @@ cd backend
 # Install dependencies
 npm install
 
-# Update .env file to point to localhost PostgreSQL
-# DATABASE_URL="postgresql://postgres:YOUR_PASSWORD@localhost:5432/kanban_db?schema=public"
-
-# Generate Prisma Client & Push Schema to DB
+# Generate Prisma Client & Push Schema
 npx prisma generate
 npx prisma db push
 
@@ -121,3 +140,41 @@ npm run dev
 ```
 
 *Frontend will run on [http://localhost:3000*](http://localhost:3000)
+
+---
+
+## 🌐 Deployment Instructions
+
+### Backend (Render)
+
+* **Root Directory:** `backend`
+* **Environment:** Node
+* **Build Command:** `npm install && npx prisma generate && npm run build`
+* **Start Command:** `npx prisma db push && npm start`
+* **Environment Variables:** Set `DATABASE_URL`, `JWT_SECRET`, and `PORT`.
+
+### Frontend (Vercel)
+
+* **Framework Preset:** Next.js
+* **Root Directory:** `frontend`
+* **Environment Variables:** Set `NEXT_PUBLIC_API_URL` to your live Render backend URL.
+
+---
+
+## 🐳 Useful Docker Commands
+
+* **View Logs:**
+```bash
+docker logs kanban_backend -f
+docker logs kanban_frontend -f
+
+```
+
+
+* **Rebuild Containers (Clean Build):**
+```bash
+docker compose down -v
+docker compose build --no-cache
+docker compose up -d
+
+```
