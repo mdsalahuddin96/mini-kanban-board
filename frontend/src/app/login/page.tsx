@@ -4,18 +4,19 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { fetcher } from '@/lip/api';
 
-
 export default function LoginPage() {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [error, setError] = useState('');
-  const router = useRouter()
+  const [loading, setLoading] = useState(false); // 1. Loading State
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setLoading(true); // 2. Start Loading
 
     const endpoint = isLogin ? '/auth/login' : '/auth/register';
     const payload = isLogin ? { email, password } : { name, email, password };
@@ -30,6 +31,8 @@ export default function LoginPage() {
       router.push('/dashboard');
     } catch (err: any) {
       setError(err.message || 'Authentication failed');
+    } finally {
+      setLoading(false); // 3. Stop Loading
     }
   };
 
@@ -76,14 +79,52 @@ export default function LoginPage() {
             />
           </div>
 
-          <button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-500 py-2 rounded font-semibold transition">
-            {isLogin ? 'Login' : 'Register'}
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-indigo-600 hover:bg-indigo-500 disabled:bg-indigo-400/50 py-2 rounded font-semibold transition flex items-center justify-center gap-2 cursor-pointer disabled:cursor-not-allowed"
+          >
+            {loading ? (
+              <>
+                <svg
+                  className="animate-spin h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                <span>Processing...</span>
+              </>
+            ) : isLogin ? (
+              'Login'
+            ) : (
+              'Register'
+            )}
           </button>
         </form>
 
         <p className="mt-4 text-center text-sm text-slate-400">
           {isLogin ? "Don't have an account? " : 'Already have an account? '}
-          <button onClick={() => setIsLogin(!isLogin)} className="text-indigo-400 underline">
+          <button
+            onClick={() => {
+              setIsLogin(!isLogin);
+              setError('');
+            }}
+            className="text-indigo-400 underline"
+          >
             {isLogin ? 'Register' : 'Login'}
           </button>
         </p>
