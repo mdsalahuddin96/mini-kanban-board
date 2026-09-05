@@ -1,5 +1,4 @@
 
-```markdown
 # Mini Kanban Board Application
 
 A full-stack Mini Kanban Board application built with **Next.js**, **Express TypeScript**, **Prisma ORM**, and **PostgreSQL**, fully containerized using **Docker**.
@@ -45,7 +44,7 @@ Make sure you have [Docker Desktop](https://www.docker.com/products/docker-deskt
 
 1. **Clone the repository:**
 ```bash
-git clone [https://github.com/your-username/mini-kanban-board.git](https://github.com/your-username/mini-kanban-board.git)
+git clone https://github.com/mdsalahuddin96/mini-kanban-board.git
 cd mini-kanban-board
 
 ```
@@ -122,38 +121,3 @@ npm run dev
 ```
 
 *Frontend will run on [http://localhost:3000*](http://localhost:3000)
-
----
-
-## 🐳 Useful Docker Commands
-
-* **View Logs:**
-```bash
-docker logs kanban_backend -f
-docker logs kanban_frontend -f
-
-```
-
-
-* **Rebuild Containers (Clean Build):**
-```bash
-docker compose down -v
-docker compose build --no-cache
-docker compose up -d
-
-```
-
-
-* **Stop All Containers:**
-```bash
-docker compose down
-
-```
-
-
-
-```
-
-<FollowUp label="প্রোজেক্টে কোনো নতুন ফিচার বা API Documentation যুক্ত করতে চান?" query="এই README ফাইলে API Endpoints ও Features সেকশন যুক্ত করে দাও।"/>
-
-```
